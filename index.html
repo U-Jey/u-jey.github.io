@@ -26,8 +26,8 @@
 </head>
 
 <body>
-    <header class="navbar navbar-expand-lg px-3 border-bottom">
-        <div class="container">
+    <header class="navbar navbar-expand-lg">
+        <div class="container pb-2 border-bottom">
             <a class="align-items-center d-flex gap-2 navbar-brand" href="#">
                 <div class="overflow-hidden rounded-circle border border-2 border-light-subtle">
                     <img src="https://avatars.githubusercontent.com/u/163908406?v=4" alt="U-Jey" width="40" height="40">
@@ -73,33 +73,47 @@
             </p>
         </section>
 
-        <!-- Champ numérique -->
         <section class="mb-4">
-            <div class="row justify-content-center align-items-start">
-                <div class="col-12 col-md-4 mb-4">
-                    <label for="scoreInput" class="form-label fs-4">Score visé</label>
-                    <input type="number" class="form-control" id="scoreInput" placeholder="Entrez une valeur" value="0" />
+            <div class="row justify-content-center align-items-start align-items-md-baseline">
+                <!-- Champ numérique -->
+                <div class="col-12 order-2 mb-4 col-md-5 order-md-1 mb-md-0 ">
+                    <div class="d-flex align-items-center gap-4">
+                        <label for="scoreInput" class="form-label fs-4" style="white-space: nowrap;">Score visé</label>
+                        <input type="number" class="form-control" id="scoreInput" placeholder="Entrez une valeur"
+                            value="0" />
+                    </div>
 
                     <div class="d-flex flex-wrap justify-content-center mt-2 gap-1">
-                        <button class="btn btn-dark rounded-2 px-3 btn-target-score" type="button" data-target-score="0">Min.</button>
-                        <button class="btn btn-dark rounded-2 px-3 btn-target-score" type="button" data-target-score="3333">3333</button>
-                        <button class="btn btn-dark rounded-2 px-3 btn-target-score" type="button" data-target-score="5000">5000</button>
-                        <button class="btn btn-dark rounded-2 px-3 btn-target-score" type="button" data-target-score="10000">10000</button>
-                        <button class="btn btn-dark rounded-2 px-3 btn-target-score" type="button" data-target-score="63156">Max.</button>
+                        <button class="btn btn-dark rounded-2 px-3 btn-target-score" type="button"
+                            data-target-score="0">Min.</button>
+                        <button class="btn btn-dark rounded-2 px-3 btn-target-score" type="button"
+                            data-target-score="3333">3333</button>
+                        <button class="btn btn-dark rounded-2 px-3 btn-target-score" type="button"
+                            data-target-score="5000">5000</button>
+                        <button class="btn btn-dark rounded-2 px-3 btn-target-score" type="button"
+                            data-target-score="10000">10000</button>
+                        <button class="btn btn-dark rounded-2 px-3 btn-target-score" type="button"
+                            data-target-score="63156">Max.</button>
                     </div>
                 </div>
 
                 <!-- Zone de résultat -->
-                <div id="resultZone" class="col-12 col-md-8">
-                    <label class="form-label fs-4">Étape du combat à atteindre</label>
-                    <div class="d-flex align-items-center gap-4">
-                        <span>Nv. <span class="bdg-level">1</span></span>
-                        <div class="bdg-health-gauge rounded-2 border-2 border border-light-subtle">
-                            <div class="bdg-health-current-level rounded-1" style="width: 100%;"></div>
+                <div class="col-12 order-1 col-md-7 order-md-2">
+                    <div class="card mb-4 rounded-3 shadow-sm">
+                        <div class="card-header py-3">
+                            <h4 class="my-0 fw-normal">Étape du combat à atteindre</h4>
                         </div>
-                    </div>
-                    <div class="fst-italic opacity-50" style="max-width: calc(100% - 8px); text-align: right;">
-                        <span class="bdg-health-current-percentage">100</span> %
+                        <div class="card-body">
+                            <div class="d-flex align-items-center gap-4">
+                                <span>Nv. <span class="bdg-level">1</span></span>
+                                <div class="bdg-health-gauge rounded-2 border-2 border border-light-subtle">
+                                    <div class="bdg-health-current-level rounded-1" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                            <div class="fst-italic opacity-50" style="max-width: calc(100% - 8px); text-align: right;">
+                                <span class="bdg-health-current-percentage">100</span> %
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
