@@ -6,6 +6,11 @@
     --u-menu-active-background-color: #04826d;
     --u-menu-color: #06b599;
     --u-menu-hover-color: #07dbb9;
+
+    /* Les couleurs pour les objectifs attendus sur le boss de guilde. */
+    --u-bronze-color: #a56c41;
+    --u-silver-color: #6a7d91;
+    --u-gold-color: #ccaa35;
 }
 
 body {
@@ -36,11 +41,48 @@ body {
     box-shadow: none;
 }
 
+.card:has(.table-responsive .bdg-milestones) {
+    /* Adaptation d'un élément .card pour le tableau des points par niveau. */
+    .card-header {
+        /* Retire la bordure du bas pour avoir un beau rendu replié. */
+        border-bottom: none;
+        cursor: pointer;
+
+        .bi {
+            color: var(--u-menu-color);
+        }
+    }
+
+    .card-body {
+        /* Applique la bordure retirée du .card-header, et supprime le padding pour le reporter au .table-responsive. */
+        border-top: var(--bs-card-border-width) solid var(--bs-card-border-color);
+        padding: 0 !important;
+
+        .table-responsive {
+            padding: 0 var(--bs-card-spacer-x) var(--bs-card-spacer-y);
+
+            table {
+                /* Modifie le comportement des bordures pour corriger le rendu du header en position sticky. */
+                border-collapse: separate;
+                border-spacing: 0;
+
+                thead th {
+                    /* Reprend le padding-top du .card-body et applque la couleur de fond du body pour cacher les lignes lors du scroll. */
+                    position: sticky;
+                    top: 0px;
+                    z-index: 2;
+                    padding-top: calc(var(--bs-card-spacer-y) + .5rem);
+                    background: var(--bs-body-bg);
+                }
+            }
+        }
+    }
+}
+
 /* Barre de vie du boss */
 .bdg-health-gauge {
     position: relative;
     height: 38px;
-    flex-grow: 1;
     background-color: rgba(0, 0, 0, .16);
 
     .bdg-health-current-level {
@@ -52,5 +94,69 @@ body {
         max-width: calc(100% - 2px);
         background-color: var(--u-menu-active-background-color);
         transition: width, ease-in-out, .2s;
+    }
+}
+
+.bdg-milestone {
+    /* Permet d'afficher le minimum de points obtenus en montant de niveau. */
+    .bdg-score,
+    .bdg-level {
+        opacity: .48;
+    }
+
+    .bdg-health-gauge {
+        height: 24px;
+        background-color: transparent;
+
+        .bdg-health-current-level {
+            background-color: color-mix(in srgb, transparent 16%, var(--u-menu-active-background-color));
+        }
+    }
+
+    &.bronze,
+    &.silver,
+    &.gold {
+        /* Mise en avant des objectifs attendus pour les points hebdomadaires. */
+        .bdg-score,
+        .bdg-level {
+            font-weight: bold;
+            opacity: 1;
+        }
+    }
+
+    &.bronze {
+        /* Le minimum requis pour espérer toucher les 10 000 points en 3 runs. */
+        .bdg-score,
+        .bdg-level {
+            color: color-mix(in srgb, white 8%, var(--u-bronze-color));
+        }
+
+        .bdg-health-current-level {
+            background-color: color-mix(in srgb, transparent 0%, var(--u-bronze-color));
+        }
+    }
+
+    &.silver {
+        /* L'objectif requis pour pouvoir toucher les 10 000 points en 2 runs. */
+        .bdg-score,
+        .bdg-level {
+            color: color-mix(in srgb, white 16%, var(--u-silver-color));
+        }
+
+        .bdg-health-current-level {
+            background-color: color-mix(in srgb, transparent 0%, var(--u-silver-color));
+        }
+    }
+
+    &.gold {
+        /* L'idéal requis pour obtenir les 10 000 points en une run. */
+        .bdg-score,
+        .bdg-level {
+            color: color-mix(in srgb, white 12%, var(--u-gold-color));
+        }
+
+        .bdg-health-current-level {
+            background-color: color-mix(in srgb, transparent 0%, var(--u-gold-color));
+        }
     }
 }

@@ -54,7 +54,7 @@
     <main class="container py-4">
 
         <!-- Bloc de description -->
-        <section class="mb-5">
+        <section class="mb-4">
             <h1 class="h4">Formule de calcul</h1>
             <p class="text-muted">
                 Pour déterminer le niveau et les PV à retirer, le calcul est <i>(pour l'instant)</i> très simple :
@@ -105,13 +105,45 @@
                         </div>
                         <div class="card-body">
                             <div class="d-flex align-items-center gap-4">
-                                <span>Nv. <span class="bdg-level">1</span></span>
-                                <div class="bdg-health-gauge rounded-2 border-2 border border-light-subtle">
+                                <span style="min-width: 46px;">Nv. <b class="bdg-level">1</b></span>
+                                <div class="bdg-health-gauge flex-grow-1 rounded-2 border-2 border border-light-subtle">
                                     <div class="bdg-health-current-level rounded-1" style="width: 100%;"></div>
                                 </div>
                             </div>
                             <div class="fst-italic opacity-50" style="max-width: calc(100% - 8px); text-align: right;">
                                 <span class="bdg-health-current-percentage">100</span> %
+                            </div>
+                            <button class="btn btn-dark rounded-2 px-3" type="button" data-bs-toggle="modal"
+                                data-bs-target="#milestonesModal">Points par niveau</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Points par niveau -->
+                <div class="col-12 order-0 col-md-7 order-md-3" style="margin-left: auto;">
+                    <div class="card mb-4 rounded-3 shadow-sm">
+                        <div class="card-header py-3 d-flex align-items-center" data-bs-toggle="collapse"
+                            href="#collapseExample">
+                            <h4 class="my-0 fw-normal flex-grow-1">Points par niveau</h4>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-hand-index-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M8.5 4.466V1.75a1.75 1.75 0 1 0-3.5 0v5.34l-1.2.24a1.5 1.5 0 0 0-1.196 1.636l.345 3.106a2.5 2.5 0 0 0 .405 1.11l1.433 2.15A1.5 1.5 0 0 0 6.035 16h6.385a1.5 1.5 0 0 0 1.302-.756l1.395-2.441a3.5 3.5 0 0 0 .444-1.389l.271-2.715a2 2 0 0 0-1.99-2.199h-.581a5 5 0 0 0-.195-.248c-.191-.229-.51-.568-.88-.716-.364-.146-.846-.132-1.158-.108l-.132.012a1.26 1.26 0 0 0-.56-.642 2.6 2.6 0 0 0-.738-.288c-.31-.062-.739-.058-1.05-.046z" />
+                            </svg>
+                        </div>
+                        <div class="card-body collapse" id="collapseExample">
+                            <div class="table-responsive" style="min-height: 230px; max-height: 40vh;">
+                                <table class="table text-center">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 46px;">Nv.</th>
+                                            <th>Dégâts infligés</th>
+                                            <th style="width: 48px;">Points</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bdg-milestones">
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
