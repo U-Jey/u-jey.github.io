@@ -97,6 +97,27 @@ body {
     }
 }
 
+/* Itération actuelle sur le niveau maximal du boss */
+.bdg-level+.bdg-limit-break {
+    // background-color: var(--u-menu-active-background-color);
+    // border-radius: 12px;
+    // padding: 1px 6px 1px 4px;
+    // font-size: 11px;
+
+    &::before {
+        content: "+";
+    }
+
+    &::after {
+        content: attr(data-limit-break);
+        font-weight: bold;
+    }
+
+    &[data-limit-break="0"] {
+        display: none;
+    }
+}
+
 .bdg-milestone {
     /* Permet d'afficher le minimum de points obtenus en montant de niveau. */
     .bdg-score,

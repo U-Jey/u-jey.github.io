@@ -29,10 +29,11 @@ var originGuildBossCalculator = (function() {
 
     let _scoreFactor = 10000, // (: ils se sont pas trop cassés la tête, et ça fait plaisir)
         _minScore = 0,
-        _maxScore = Math.trunc(Math.max.apply(Math, _guildBossLevels.map(l => l.totalHealth)) / _scoreFactor);
+        _maxTheoreticalScore = Math.trunc(Math.max.apply(Math, _guildBossLevels.map(l => l.totalHealth)) / _scoreFactor);
 
     let _$scoreInput = null,
         _$levelSpan = null,
+        _$limitBreakSup = null,
         _$currentHealthBlock = null,
         _$currentHealthSpan = null,
         _$targetScoreButtons = null;
@@ -41,6 +42,7 @@ var originGuildBossCalculator = (function() {
     function initMembers() {
         _$scoreInput = $("#scoreInput");
         _$levelSpan = $(".bdg-level");
+        _$limitBreakSup = $(".bdg-limit-break");
         _$currentHealthBlock = $(".bdg-health-current-level");
         _$currentHealthSpan = $(".bdg-health-current-percentage");
         _$targetScoreButtons = $(".btn-target-score");
@@ -55,21 +57,41 @@ var originGuildBossCalculator = (function() {
                 ? 0
                 : score < _minScore 
                     ? _minScore 
-                    : score > _maxScore 
-                        ? _maxScore 
-                        : score;
+                    : score;
 
             // On met à jour le champ avec la valeur corrigée.
             _$scoreInput.val(score);
 
+            // On prépare une variable locale pour travailler sur le score réel sans l'affecter (au cas où celui-ci dépasserait le score maximal théorique).
+            let workingScore = score,
+                limitBreak = 0;
+
+            // Si on dépasse le score maximal théorique, on boucle indéfiniment sur le dernier niveau :
+            // - on doit donc déterminer l'itération actuelle de ce niveau (limitBreak) ;
+            // - et on ramène le score à un niveau équivalent à sa progression dans les limites théoriques (workingScore).
+            if (score > _maxTheoreticalScore) {
+                // Pour commencer, on détermine le montant du score qui sort des limites.
+                // Ensuite, on calcule le nombre de dégâts que cet excédent représente et on le divise par les PV du niveau maximal.
+                let maxLevel = _guildBossLevels.slice(-1)[0],
+                    limitBreakScore = score - _maxTheoreticalScore,
+                    limitBreakDivisionResult = limitBreakScore * _scoreFactor / maxLevel.health;
+
+                // L'itération actuelle du dernier niveau est déterminée par la partie entière du résultat de la division.
+                limitBreak = 1 + Math.trunc(limitBreakDivisionResult);
+
+                // Le score de travail, donc dans les limites théoriques, est calculable à l'aide du reste de la division.
+                workingScore = _maxTheoreticalScore - Math.trunc((1 - limitBreakDivisionResult % 1) * maxLevel.health / _scoreFactor);
+            }
+
             // On applique le calcul de con.
-            let targetDamage = score * _scoreFactor,
+            let targetDamage = workingScore * _scoreFactor,
                 targetLevel = _guildBossLevels.filter(l => l.totalHealth > targetDamage)[0],
                 targetRemainingHealth = targetLevel.totalHealth - targetDamage,
                 targetRemainingHealthPercentage = targetRemainingHealth * 100 / targetLevel.health;
 
             // On met à jour les éléments visuels de l'écran.
             _$levelSpan.text(targetLevel.level);
+            _$limitBreakSup.attr("data-limit-break", limitBreak);
             _$currentHealthBlock.css("width", `${targetRemainingHealthPercentage}%`);
             _$currentHealthSpan.text(`${targetRemainingHealthPercentage.toFixed(2)}`);
         });
@@ -100,8 +122,7 @@ var originGuildBossCalculator = (function() {
                     ];
 
                 // On ajoute ensuite les bordures min. et max. pour entourer les scores par niveau.
-                sheetLevels.unshift({ label: "Min.", totalHealth: 0 });
-                sheetLevels.push({ label: "Max.", totalHealth: maxLevel.totalHealth });
+                sheetLevels.unshift({ label: "1", totalHealth: 0 });
 
                 for (let level of sheetLevels) {
                     // On prépare la ligne à ajouter, et on calcule le score minimum pour le niveau.
