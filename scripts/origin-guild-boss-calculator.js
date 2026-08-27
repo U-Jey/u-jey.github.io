@@ -4,32 +4,46 @@ var originGuildBossCalculator = (function() {
 
     let _module = {};
 
+    // Les données ci-dessous proviennent de ce site fantastique : https://7dsorigin.app/fr/boss-de-confrerie/akumu-bete-demoniaque
+    // Merci à elles / eux !
     let _guildBossLevels = [
-        { level: 1, health: 2090121, totalHealth: 2090121 },
-        { level: 2, health: 2923402, totalHealth: 5013523 },
-        { level: 3, health: 3974208, totalHealth: 8987731 },
-        { level: 4, health: 5180389, totalHealth: 14168120 },
-        { level: 5, health: 6541945, totalHealth: 20710065 },
-        { level: 6, health: 8198714, totalHealth: 28908779 },
-        { level: 7, health: 10197308, totalHealth: 39106087 },
-        { level: 8, health: 12413428, totalHealth: 51519515 },
-        { level: 9, health: 14847073, totalHealth: 66366588 },
-        { level: 10, health: 17700232, totalHealth: 84066820 },
-        { level: 11, health: 24022303, totalHealth: 108089123 },
-        { level: 12, health: 28721553, totalHealth: 136810676 },
-        { level: 13, health: 34135530, totalHealth: 170946206 },
-        { level: 14, health: 40334151, totalHealth: 211280357 },
-        { level: 15, health: 47387335, totalHealth: 258667692 },
-        { level: 16, health: 54999870, totalHealth: 313667562 },
-        { level: 17, health: 63560194, totalHealth: 377227756 },
-        { level: 18, health: 73549970, totalHealth: 450777726 },
-        { level: 19, health: 84238935, totalHealth: 535016661 },
-        { level: 20, health: 96543801, totalHealth: 631560462 }
+        { level: 1, health: 2090121 },
+        { level: 2, health: 2923402 },
+        { level: 3, health: 3974208 },
+        { level: 4, health: 5180389 },
+        { level: 5, health: 6541945 },
+        { level: 6, health: 8198714 },
+        { level: 7, health: 10197308 },
+        { level: 8, health: 12413428 },
+        { level: 9, health: 14847073 },
+        { level: 10, health: 17700232 },
+
+        { level: 11, health: 24022303 },
+        { level: 12, health: 28721553 },
+        { level: 13, health: 34135530 },
+        { level: 14, health: 40334151 },
+        { level: 15, health: 47387335 },
+        { level: 16, health: 54999870 },
+        { level: 17, health: 63560194 },
+        { level: 18, health: 73549970 },
+        { level: 19, health: 84238935 },
+        { level: 20, health: 96543801 },
+
+        { level: 21, health: 102375267 },
+        { level: 22, health: 112611620 },
+        { level: 23, health: 123127648 },
+        { level: 24, health: 134412784 },
+        { level: 25, health: 146490333 },
+        { level: 26, health: 158878632 },
+        { level: 27, health: 172090420 },
+        { level: 28, health: 185628496 },
+        { level: 29, health: 200021136 },
+        { level: 30, health: 214755600 },
     ];
 
     let _scoreFactor = 10000, // (: ils se sont pas trop cassés la tête, et ça fait plaisir)
         _minScore = 0,
-        _maxTheoreticalScore = Math.trunc(Math.max.apply(Math, _guildBossLevels.map(l => l.totalHealth)) / _scoreFactor);
+        _maxTheoreticalScore = null; // (: on le calcule désormais dans la méthode "computeBossLevelData")
 
     let _$scoreInput = null,
         _$levelSpan = null,
@@ -37,6 +51,20 @@ var originGuildBossCalculator = (function() {
         _$currentHealthBlock = null,
         _$currentHealthSpan = null,
         _$targetScoreButtons = null;
+
+    /** Prépare les données nécessaire au fonctionnement du moteur de calcul. */
+    function computeBossLevelData() {
+        let totalHealth = 0;
+
+        // On commence par calculer le cumul des PV par niveau...
+        $.each(_guildBossLevels, function(i, level) {
+            totalHealth += level.health;
+            level.totalHealth = totalHealth;
+        });
+
+        // ... Pour déterminer ensuite le score maximal théorique.
+        _maxTheoreticalScore = Math.trunc(Math.max.apply(Math, _guildBossLevels.map(l => l.totalHealth)) / _scoreFactor);
+    }
 
     /** Initialise les membres internes. */
     function initMembers() {
@@ -46,6 +74,9 @@ var originGuildBossCalculator = (function() {
         _$currentHealthBlock = $(".bdg-health-current-level");
         _$currentHealthSpan = $(".bdg-health-current-percentage");
         _$targetScoreButtons = $(".btn-target-score");
+
+        // On n'oublie pas de mettre à jour le score maximum théorique dans le bouton concerné.
+        _$targetScoreButtons.filter((i, b) => $(b).is(".maximum")).attr("data-target-score", _maxTheoreticalScore);
     }
 
     /** Associe les handlers aux événements des membres du module. */
@@ -151,6 +182,8 @@ var originGuildBossCalculator = (function() {
 
     /** Initialise le module JS. */
     _module.init = function() {
+        computeBossLevelData();
+
         initMembers();
         bindEvents();
         buildCheatSheet();
